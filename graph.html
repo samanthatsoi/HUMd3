@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <script src="http://d3js.org/d3.v4.min.js"></script>
+  <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+</head>
+<style> /* set the CSS */
+
+body { font: 12px Arial;}
+
+path { 
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+
+</style>
+<h1 id="output">
+
+</h1>
+<svg id="my_dataviz2" height=300 width=450></svg>
+<svg>
+  </svg>
+<script>
+function mOver(d) {
+    d3.select(this)
+        .transition().duration(200)//Set transition
+        .duration(300)
+        .style('stroke-width', 7);
+}
+
+var tooltip = d3.select("body")
+    .append("div")
+    .style("position", "absolute")
+    .style("z-index", "10")
+    .style("visibility", "hidden")
+    .text("a simple tooltip");
+//initialize graph size, colors, etc.
+var seteachypos = 10;
+var maxWidth = 960;
+var maxHeight = 500;
+var colors = ['darkseagreen', 'darkmagenta', 'slategrey', 'darkorange', 'sienna', 'cornflowerblue', 'yellowgreen', 'darkviolet'];
+
+
+//graph1!!!!
+seteachypos = seteachypos + 40;
+// set the dimensions and margins of the graph
+var margin = {
+        top: seteachypos,
+        right: 80,
+        bottom: 30,
+        left: 50
+    },
+    width = 1000 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+
+// set the ranges
+var x = d3.scaleTime().range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
+
+// define the line
+var valueline = d3.line()
+    .x(function(d) {
+        return x(d.date);
+    })
+    .y(function(d) {
+        return y(d.Size);
+    })
+    .curve(d3.curveMonotoneX); // apply smoothing to the line
+
+// append the svg obgect to the body of the page
+// appends a 'group' element to 'svg'
+// moves the 'group' element to the top left margin
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+
+
+d3.csv("dfisimo.csv", function(error, data) {
+
+
+    var parseTime = d3.timeParse("%Y-%m");
+    data.forEach(function(d) {
+        d.date = parseTime(d.date);
+        d.Size = +d.Size;
+    });
+
+
+    var yMax = d3.max(data, function(d) {
+        return d.Size;
+    })
+    // Scale the range of the data
+    x.domain(d3.extent(data, function(d) {
+        return d.date;
+    }));
+    y.domain([0, yMax]); //d3.max(data, function(d) { return d.Size; })
+
+
+
+    var categories = [];
+    for (var i = 0; i < Object.keys(data).length; i++) {
+        if (typeof data[i] !== 'undefined') {
+            if (!categories.includes(data[i].category)) {
+                categories.push(data[i].category);
+            }
+        }
+    }
+
+    for (var i = 0; i < categories.length; i++) {
+        const dataofcat = data.filter(di => di.category === categories[i]);
+        svg.append("path")
+            .data([dataofcat])
+            .style('stroke', colors[i])
+            .style('stroke-width', 4)
+            .attr("class", "line")
+            .attr('d', valueline)
+             .on('mouseover', mOver)
+               .on('mouseout', function(d) {
+       d3.select(this)
+           .transition()
+           .duration(300)
+           .style('stroke-width', 4);
+    });
+
+    }
+
+
+    // 12. Appends a circle for each datapoint 
+    svg.selectAll(".dot")
+        .data(data)
+        .enter().append("circle") // Uses the enter().append() method
+        .attr("class", "dot") // Assign a class for styling
+        .attr("cx", function(d) {
+            return x(d.date)
+        })
+        .attr("cy", function(d) {
+            return y(d.Size)
+        })
+        .attr("r", 5);
+    // Add the X Axis
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+    // Add the Y Axis
+    svg.append("g")
+        .call(d3.axisLeft(y));
+
+
+        // Add one dot in the legend for each name.
+    svg.selectAll("mydots")
+      .data(categories)
+      .enter()
+      .append("circle")
+        .attr("cx", maxWidth-140)
+        .attr("cy", function(d,i){ return yMax + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
+        .attr("r", 7)
+        .style("fill", function(d,i) {return colors[i]})
+
+    // Add one dot in the legend for each name.
+    svg.selectAll("mylabels")
+      .data(categories)
+      .enter()
+      .append("text")
+        .attr("x", maxWidth-120)
+        .attr("y", function(d,i){ return yMax + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
+        .style("fill", function(d,i) {return colors[i]})
+        .text(function(d){ return d})
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle")
+
+
+
+});
+
+seteachypos = seteachypos + 40;
+// set the dimensions and margins of the graph
+var margin = {
+        top: seteachypos,
+        right: 20,
+        bottom: 30,
+        left: 50
+    },
+    width = maxWidth - margin.left - margin.right,
+    height = maxHeight - margin.top - margin.bottom;
+
+
+// set the ranges
+var x = d3.scaleTime().range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
+
+// append the svg obgect to the body of the page
+// appends a 'group' element to 'svg'
+// moves the 'group' element to the top left margin
+var svg2 = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+
+
+d3.csv("dffilo.csv", function(error, data) {
+
+
+    var parseTime = d3.timeParse("%Y-%m");
+    data.forEach(function(d) {
+        d.date = parseTime(d.date);
+        d.Size = +d.Size;
+    });
+
+
+    var yMax = d3.max(data, function(d) {
+        return d.Size;
+    })
+    // Scale the range of the data
+    x.domain(d3.extent(data, function(d) {
+        return d.date;
+    }));
+    y.domain([0, yMax]); //d3.max(data, function(d) { return d.Size; })
+
+
+    // Add the valueline path.
+
+    var categories = [];
+    for (var i = 0; i < Object.keys(data).length; i++) {
+        if (typeof data[i] !== 'undefined') {
+            if (!categories.includes(data[i].category)) {
+                categories.push(data[i].category);
+            }
+        }
+    }
+
+    for (var i = 0; i < categories.length; i++) {
+        const dataofcat = data.filter(di => di.category === categories[i]);
+        svg2.append("path")
+            .data([dataofcat])
+            .style('stroke', colors[i])
+            .style('stroke-width', 4)
+            .attr("class", "line")
+            .attr('d', valueline) 
+            .on('mouseover', mOver)
+               .on('mouseout', function(d) {
+       d3.select(this)
+           .transition()
+           .duration(300)
+           .style('stroke-width', 4);
+    });
+
+    }
+
+
+    // 12. Appends a circle for each datapoint 
+    svg2.selectAll(".dot")
+        .data(data)
+        .enter().append("circle") // Uses the enter().append() method
+        .attr("class", "dot") // Assign a class for styling
+        .attr("cx", function(d) {
+            return x(d.date)
+        })
+        .attr("cy", function(d) {
+            return y(d.Size)
+        })
+        .attr("r", 5)
+        .attr("stroke-width", "50");
+
+    // Add the X Axis
+    svg2.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+    // Add the Y Axis
+    svg2.append("g")
+        .call(d3.axisLeft(y));
+
+
+        // Add one dot in the legend for each name.
+    svg2.selectAll("mydots")
+      .data(categories)
+      .enter()
+      .append("circle")
+        .attr("cx", maxWidth-140)
+        .attr("cy", function(d,i){ return yMax + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
+        .attr("r", 7)
+        .style("fill", function(d,i) {return colors[i]})
+
+    // Add one dot in the legend for each name.
+    svg2.selectAll("mylabels")
+      .data(categories)
+      .enter()
+      .append("text")
+        .attr("x", maxWidth-120)
+        .attr("y", function(d,i){ return yMax + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
+        .style("fill", function(d,i) {return colors[i]})
+        .text(function(d){ return d})
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle")
+
+
+
+});
+
+
+
+seteachypos = seteachypos + 40;
+// set the dimensions and margins of the graph
+var margin = {
+        top: seteachypos,
+        right: 80,
+        bottom: 30,
+        left: 50
+    },
+    width = 1000 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+
+// set the ranges
+var x = d3.scaleTime().range([0, width-100]);
+var y = d3.scaleLinear().range([height, 0]);
+
+// append the svg obgect to the body of the page
+// appends a 'group' element to 'svg'
+// moves the 'group' element to the top left margin
+var svg3 = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+
+
+
+d3.csv("dfcito.csv", function(error, data) {
+
+    var parseTime = d3.timeParse("%Y-%m");
+    data.forEach(function(d) {
+        d.date = parseTime(d.date);
+        d.Size = +d.Size;
+    });
+
+
+    var yMax = d3.max(data, function(d) {
+        return d.Size;
+    })
+    // Scale the range of the data
+    x.domain(d3.extent(data, function(d) {
+        return d.date;
+    }));
+    y.domain([0, yMax]); //d3.max(data, function(d) { return d.Size; })
+
+    //   var unique = data[0].category.filter(onlyUnique); // returns ['a', 1, 2, '1']
+
+
+
+
+  // create a tooltip
+  var Tooltip = d3.select("#div_template")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "2px")
+    .style("border-radius", "5px")
+    .style("padding", "5px")
+
+// create a list of keys
+  var mouseover = function(d) {
+    Tooltip
+      .style("opacity", 1)
+    d3.select(this)
+      .style("stroke", "black")
+      .style("opacity", 1)
+  }
+  var mouseleave = function(d) {
+    Tooltip
+      .style("opacity", 0)
+    d3.select(this)
+      .style("stroke", "none")
+      .style("opacity", 0.8)
+  }
+
+
+
+    var categories = [];
+    for (var i = 0; i < Object.keys(data).length; i++) {
+        if (typeof data[i] !== 'undefined') {
+            if (!categories.includes(data[i].category)) {
+                categories.push(data[i].category);
+            }
+        }
+    }
+    for (var i = 0; i < categories.length; i++) {
+        const dataofcat = data.filter(di => di.category === categories[i]);
+        svg3.append("path")
+            .data([dataofcat])
+            .style('stroke', colors[i])
+            .attr("class", "line")
+            .style('stroke-width', 4)
+            .attr('d', valueline)
+            .attr('id', categories[i])
+            .on('mouseover', mOver)
+               .on('mouseout', function(d) {
+       d3.select(this)
+           .transition()
+           .duration(300)
+           .style('stroke-width', 4);
+    });
+
+    }
+
+
+    // 12. Appends a circle for each datapoint 
+    svg3.selectAll(".dot")
+        .data(data)
+        .enter().append("circle") // Uses the enter().append() method
+        .attr("class", "dot") // Assign a class for styling
+        .attr("cx", function(d) {
+            return x(d.date)
+        })
+        .attr("cy", function(d) {
+            return y(d.Size)
+        })
+        .attr("r", 5)
+        .attr("stroke-width", "50")
+
+
+
+
+    // Add the X Axis
+    svg3.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+    // Add the Y Axis
+    svg3.append("g")
+        .call(d3.axisLeft(y));
+
+
+  // draw legend
+// select the svg area
+//var Svg = d3.select("#my_dataviz2")
+    // Add one dot in the legend for each name.
+    svg3.selectAll("mydots")
+      .data(categories)
+      .enter()
+      .append("circle")
+        .attr("cx", maxWidth-140)
+        .attr("cy", function(d,i){ return yMax + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
+        .attr("r", 7)
+        .style("fill", function(d,i) {return colors[i]})
+    .on('mouseover', function(d) {
+        
+        d3.select(this)
+            .transition().duration(200)//Set transition
+            .style('fill', '#ededed')
+            .style('background-color', 'red')
+    })
+
+    .on('mouseout', function(d,i) {
+        
+        d3.select(this)
+            .transition().duration(500)//Set transition
+            .style('fill', colors[i])
+    })
+
+    // Add one dot in the legend for each name.
+    svg3.selectAll("mylabels")
+      .data(categories)
+      .enter()
+      .append("text")
+        .attr("x", maxWidth-120)
+        .attr("y", function(d,i){ return yMax + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
+        .style("fill", function(d,i) {return colors[i]})
+        .text(function(d){ return d})
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle")
+
+});
+
+
+
+</script>
+</html>
