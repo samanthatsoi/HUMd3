@@ -24,12 +24,10 @@ path {
 }
 
 </style>
-<h1 id="body">
+<h1 id="body"></h1>
 
-</h1>
 <svg id="my_dataviz2" height=300 width=450></svg>
-<svg>
-  </svg>
+
 <script>
 
   // create a tooltip
@@ -42,6 +40,7 @@ path {
     .style("border-width", "2px")
     .style("border-radius", "5px")
     .style("padding", "5px")
+    .style("position", "relative")
 
   var pointOver = function(d) {
     Tooltip
@@ -56,8 +55,8 @@ path {
   var pointMove = function(d) {
     Tooltip
       .html(d.Size + " es el número de veces que una pregunta ha aparecido en la categoría")
-      .style("left", (d3.mouse(this)[0]+70) + "px")
-      .style("top", (d3.mouse(this)[1]) + "px")
+      .style("left", (event.pageY)+"px")
+      .style("top", (event.pageY)+"px")
     d3.select(this)
       .style("stroke", "none")
       .style("opacity", 1)
@@ -88,11 +87,16 @@ path {
     .style("border-width", "2px")
     .style("border-radius", "5px")
     .style("padding", "5px")
+    .style("position", "relative")
+    .attr("width", 100)
 
 
 
     var lineOver = function(d) {
+        console.log("lineover")
             lineTooltip
+            .style("top", (event.pageY)+"px")
+        .style("left",(event.pageX)+"px")
       .style("opacity", 1)
         d3.select(this)
             .transition()
@@ -100,14 +104,18 @@ path {
             .style('stroke-width', 7);
     }
       var lineMove = function(d) {
-        console.log(this)
+         console.log("linemove " + event.pageY)
     lineTooltip
+    .style("opacity", 1)
       .html(this.id)
-      .style("left", (d3.mouse(this)[0]+70) + "px")
-      .style("top", (d3.mouse(this)[1]) + "px")
+          .style("top", (event.pageY)+"px")
+        .style("left",(event.pageX)+"px")
+
     d3.select(this)
    //   .style("stroke", "none")
       .style("opacity", 1)
+      .html(this.id)
+
  // .style("top", (px")
    //   .attr("r", 2)
      // .attr("stroke-width", "70")
@@ -200,7 +208,7 @@ d3.csv("dfisimo.csv", function(error, data) {
 
     for (var i = 0; i < categories.length; i++) {
         const dataofcat = data.filter(di => di.category === categories[i]);
-        console.log(dataofcat);
+        
         svg.append("path")
             .data([dataofcat])
             .style('stroke', colors[i])
