@@ -7,7 +7,7 @@
 </head>
 <style> /* set the CSS */
 
-body { font: 12px Arial;}
+body { font: 7px Candara;}
 
 path { 
     stroke: steelblue;
@@ -24,26 +24,100 @@ path {
 }
 
 </style>
-<h1 id="output">
+<h1 id="body">
 
 </h1>
 <svg id="my_dataviz2" height=300 width=450></svg>
 <svg>
   </svg>
 <script>
-function mOver(d) {
-    d3.select(this)
-        .transition().duration(200)//Set transition
-        .duration(300)
-        .style('stroke-width', 7);
-}
 
-var tooltip = d3.select("body")
+  // create a tooltip
+  var Tooltip = d3.select("#body")
     .append("div")
-    .style("position", "absolute")
-    .style("z-index", "10")
-    .style("visibility", "hidden")
-    .text("a simple tooltip");
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "2px")
+    .style("border-radius", "5px")
+    .style("padding", "5px")
+
+  var pointOver = function(d) {
+    Tooltip
+      .style("opacity", 1)
+    d3.select(this)
+      .style("stroke", "black")
+      .style("opacity", 1)
+           .attr("r", 5)
+        .attr("stroke-width", "50")
+
+  }
+  var pointMove = function(d) {
+    Tooltip
+      .html(d.Size + " es el número de veces que una pregunta ha aparecido en " + function(d){ return d})
+      .style("left", (d3.mouse(this)[0]+70) + "px")
+      .style("top", (d3.mouse(this)[1]) + "px")
+    d3.select(this)
+      .style("stroke", "none")
+      .style("opacity", 1)
+           .attr("r", 7)
+        .attr("stroke-width", "50")
+        .style("fill", "red")
+ // .style("top", (px")
+   //   .attr("r", 2)
+     // .attr("stroke-width", "70")
+  }
+  var pointLeave = function(d) {
+
+    Tooltip
+      .style("opacity", 0)
+    d3.select(this)
+      .style("stroke", "none")
+      .style("opacity", 1)
+           .attr("r", 5)
+        .attr("stroke-width", "50")
+        .style("fill","black")
+  }
+
+
+    var mOver = function(d) {
+            Tooltip
+      .style("opacity", 1)
+        d3.select(this)
+            .transition().duration(200)//Set transition
+            .duration(300)
+            .style('stroke-width', 7);
+    }
+      var lineMove = function(d) {
+    Tooltip
+      .html(d.Size + " es easdfo en " + function(d){ return d})
+      .style("left", (d3.mouse(this)[0]+70) + "px")
+      .style("top", (d3.mouse(this)[1]) + "px")
+    d3.select(this)
+      .style("stroke", "none")
+      .style("opacity", 1)
+           .attr("r", 7)
+        .attr("stroke-width", "50")
+        .style("fill", "red")
+ // .style("top", (px")
+   //   .attr("r", 2)
+     // .attr("stroke-width", "70")
+  }
+    var lineLeave = function(d) {
+
+    Tooltip
+      .style("opacity", 0)
+    d3.select(this)
+        .style("fill","black")
+           .transition()
+           .duration(300)
+           .style('stroke-width', 4);
+  }
+
+
+
+
 //initialize graph size, colors, etc.
 var seteachypos = 10;
 var maxWidth = 960;
@@ -334,7 +408,7 @@ var y = d3.scaleLinear().range([height, 0]);
 // append the svg obgect to the body of the page
 // appends a 'group' element to 'svg'
 // moves the 'group' element to the top left margin
-var svg3 = d3.select("body").append("svg")
+var svg3 = d3.select("#body").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -366,33 +440,6 @@ d3.csv("dfcito.csv", function(error, data) {
 
 
 
-  // create a tooltip
-  var Tooltip = d3.select("#div_template")
-    .append("div")
-    .style("opacity", 0)
-    .attr("class", "tooltip")
-    .style("background-color", "white")
-    .style("border", "solid")
-    .style("border-width", "2px")
-    .style("border-radius", "5px")
-    .style("padding", "5px")
-
-// create a list of keys
-  var mouseover = function(d) {
-    Tooltip
-      .style("opacity", 1)
-    d3.select(this)
-      .style("stroke", "black")
-      .style("opacity", 1)
-  }
-  var mouseleave = function(d) {
-    Tooltip
-      .style("opacity", 0)
-    d3.select(this)
-      .style("stroke", "none")
-      .style("opacity", 0.8)
-  }
-
 
 
     var categories = [];
@@ -423,6 +470,7 @@ d3.csv("dfcito.csv", function(error, data) {
     }
 
 
+
     // 12. Appends a circle for each datapoint 
     svg3.selectAll(".dot")
         .data(data)
@@ -436,6 +484,9 @@ d3.csv("dfcito.csv", function(error, data) {
         })
         .attr("r", 5)
         .attr("stroke-width", "50")
+    .on("mouseover", pointOver)
+    .on("mousemove", pointMove)
+    .on("mouseleave", pointLeave)
 
 
 
