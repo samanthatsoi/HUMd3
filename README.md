@@ -28,17 +28,14 @@ Hacer los gráficos con los archivos <br />
 ...2b. Usa 'cd ..' a regresar a la última carpeta. <br />
 ...2c. Puede encontrar la carpeta actual tipeando 'pwd' en tu Terminal (en Windows/PC, el comando es 'cwd'). <br />
 ...2d. Puede encontrar los archivos y las carpetas en la carpeta actual tipeando 'ls' en tu Terminal (Mac) o Console (Windows/PC) 
-<br />
-<br />
+
 ![linux](https://user-images.githubusercontent.com/8455299/59278378-dff15f00-8c2f-11e9-91be-dc415e9b66db.png)
 <br />
 3. Cuando has llegado a la carpeta donde los archivos se ubican, escribe 'python3 -m http.server' en el Terminal o Console.
-<br />
-<br />
+
 ![http server](https://user-images.githubusercontent.com/8455299/59278591-48d8d700-8c30-11e9-8b47-fa0ba643ec4c.png)
 <br />
 4. Abre un browser (Chrome, Safari, etc.) y va a http://0.0.0.0:8000/graph.html <br>
 Listo!
-<br />
-<br />
+
 ![listo](https://user-images.githubusercontent.com/8455299/59278780-a5d48d00-8c30-11e9-8271-22360dac9b08.png)
