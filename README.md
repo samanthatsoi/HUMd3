@@ -13,12 +13,14 @@ Hacer los gráficos con los archivos cargados de 'Seguimiento-Gestion-HUMDrive.x
 <br />
 1. Asegúrate de que ya corras el 'Seguimiento-Gestion-HUMDrive.ipynb' con las instrucciones incluido para que tengas los datos más actualizados. <br />
 2. Encontrarás cuatro archivos hechos de la ejecución de "'Seguimiento-Gestion-HUMDrive.ipynb'" en la carpeta "HUMd3". 
+<br />
 ![colabfolderview](https://user-images.githubusercontent.com/8455299/60748436-da9be180-9f5b-11e9-9df8-0e99264bb4b8.png)
 <br />
 3. Carga los archivos y ponlos en la misma carpeta donde 'graph.html' se ubica. 
+<br />
 ![filessamefolder](https://user-images.githubusercontent.com/8455299/60749790-2d31c980-9f6d-11e9-9e75-084166fb0291.png)
  <br />
- 
+
 #### Para ejecutarlo:
 <br />
 1. Abre la Terminal en tu Mac (o Console en tu Windows/PC).
