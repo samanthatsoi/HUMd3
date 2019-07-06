@@ -1,20 +1,24 @@
 ## Documentacion por graph.html <br />
 _Por: Samantha Tsoi_ <br />
-Fecha de la última actualización: 11/06/2019 <br/>
+Fecha de la última actualización: 05/07/2019 <br/>
 <br />
 
 #### Resumen:
 <br />
-Hacer los gráficos con los archivos con 'Seguimiento-Gestion-HUM.xlsx'. El código hace tres gráficos. Los gráficos se separan por los valores. Por ejemplo, el primer gráfico tiene las categorías más usadas en 'Seguimiento-Gestion-HUM.xlsx' y el última tiene las categorías menos usadas. A ver los puntos exactos en los gráficos, puedes hover a cualquier punto. Igual a clarificar y diferenciar las líneas en los gráficos, puedes hover a cualquier línea. <br />
+Hacer los gráficos con los archivos cargados de 'Seguimiento-Gestion-HUMDrive.xlsx'. El código hace tres gráficos. Los gráficos se separan por los valores. Por ejemplo, el primer gráfico tiene las categorías más usadas en 'Seguimiento-Gestion-HUM.xlsx' y el última tiene las categorías menos usadas. A ver los puntos exactos en los gráficos, puedes hover a cualquier punto. Igual a clarificar y diferenciar las líneas en los gráficos, puedes hover a cualquier línea. <br />
 
 <br />
 
 #### Antes de ejecutarlo:
 <br />
-1. Asegúrate de que ya corras el 'Seguimiento-Gestion-HUM.ipynb' con las instrucciones incluido para que tengas los datos más actualizados. <br />
-2. Asegúrate de que esta carpeta tenga los archivos 'graph.html', 'df1819.csv', 'dfcito.csv', 'dffilo.csv' y 'dfisimo.csv'. Estos archivos están cargados cuando corras el 'Seguimiento-Gestion-HUM.ipynb'. <br />
-3. Asegúrate de que el Python ya esté cargados en la computadora. <br/>
-<br/>
+1. Asegúrate de que ya corras el 'Seguimiento-Gestion-HUMDrive.ipynb' con las instrucciones incluido para que tengas los datos más actualizados. <br />
+2. Encontrarás cuatro archivos hechos de la ejecución de "'Seguimiento-Gestion-HUMDrive.ipynb'" en la carpeta "HUMd3"
+![colabfolderview](https://user-images.githubusercontent.com/8455299/60748436-da9be180-9f5b-11e9-9df8-0e99264bb4b8.png)
+
+3. Carga los archivos y ponlos en la misma carpeta donde 'graph.html' se ubica.
+![filessamefolder](https://user-images.githubusercontent.com/8455299/60749790-2d31c980-9f6d-11e9-9e75-084166fb0291.png)
+
+
 
 #### Para ejecutarlo:
 <br />
